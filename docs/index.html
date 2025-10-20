@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NEURAL DIGIT CLASSIFIER</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg-1: #0f1724;
+      --bg-2: #071020;
+      --glass: rgba(255,255,255,0.04);
+      --muted: #a6b0bf;
+      --accent-start: #7c3aed;
+      --accent-end: #06b6d4;
+    }
+
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color:#e6eef8;
+      background:
+        radial-gradient(800px 400px at 10% 10%, rgba(124,58,237,0.12), transparent 12%),
+        radial-gradient(700px 400px at 95% 90%, rgba(6,182,212,0.08), transparent 12%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:32px 18px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .wrapper{
+      max-width:1100px;
+      margin: 0 auto;
+    }
+
+    header.topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:22px;
+    }
+
+    .brand {
+      display:flex;
+      gap:14px;
+      align-items:center;
+    }
+    .logo{
+      width:56px;height:56px;border-radius:12px;
+      display:grid;place-items:center;font-weight:700;color:white;
+      background: linear-gradient(135deg,var(--accent-start),var(--accent-end));
+      box-shadow: 0 8px 30px rgba(6,11,22,0.6);
+      font-size:18px;
+    }
+    .title {
+      display:flex;flex-direction:column;
+    }
+    .title h1{
+      margin:0;font-size:1.25rem;color:#fff;font-weight:700;
+    }
+    .title p{margin:2px 0 0 0;color:var(--muted);font-size:0.95rem}
+
+    .actions {
+      display:flex;gap:10px;align-items:center;
+    }
+    .badge{
+      background: rgba(255,255,255,0.03);
+      border:1px solid rgba(255,255,255,0.03);
+      padding:8px 12px;border-radius:999px;color:var(--muted);font-weight:600;font-size:0.92rem;
+    }
+
+    /* layout */
+    .main-grid{
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:22px;
+      align-items:start;
+    }
+
+    /* glass card */
+    .glass {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.04);
+      border-radius:14px;
+      padding:18px;
+      box-shadow: 0 14px 40px rgba(2,6,23,0.6);
+    }
+
+    /* left column - canvas */
+    .draw-area { text-align:center; }
+    .draw-title { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px; }
+    .draw-title h3 { margin:0; color:#fff; font-size:1.05rem; }
+    .draw-sub { color:var(--muted); font-size:0.92rem; margin-top:6px;}
+
+    .canvas-frame {
+      display:inline-block; padding:12px; border-radius:12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 18px 40px rgba(2,6,23,0.7), inset 0 2px 8px rgba(255,255,255,0.02);
+    }
+
+    canvas#drawCanvas{
+      background:#ffffff; border-radius:8px; width:320px; height:320px; display:block;
+      image-rendering: pixelated; touch-action:none; box-shadow: 0 12px 30px rgba(2,6,23,0.5);
+    }
+
+    .controls { display:flex; gap:10px; justify-content:center; margin-top:12px; flex-wrap:wrap }
+    .btn {
+      border-radius:999px; padding:10px 18px; font-weight:600;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.45);
+    }
+    .btn-clear { background:transparent; border:1px solid rgba(255,255,255,0.06); color:#e6eef8; }
+    .btn-predict { background: linear-gradient(90deg,var(--accent-start),var(--accent-end)); color:#fff; border:none; }
+
+    /* right column - predictions */
+    .prediction-panel h4 { margin:0; color:#fff; font-size:1.1rem; }
+    .prediction-top {
+      display:flex; align-items:center; gap:14px; margin:14px 0;
+    }
+    .prediction-bubble {
+      width:88px; height:88px; border-radius:14px;
+      display:grid; place-items:center; font-size:28px; font-weight:800;
+      background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      border:1px solid rgba(255,255,255,0.03);
+      color:#fff;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+    }
+    .prediction-meta { color:var(--muted) }
+
+    .top3 { margin-top:12px; display:flex; flex-direction:column; gap:8px; }
+    .top3 .item {
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+      background: rgba(255,255,255,0.02); padding:10px 12px; border-radius:10px;
+      border:1px solid rgba(255,255,255,0.02); color:#f1f5f9;
+    }
+
+    /* probability bars */
+    .probabilities { margin-top:14px; display:flex; flex-direction:column; gap:8px; }
+    .prob-row { display:flex; gap:10px; align-items:center; }
+    .digit-label{ width:28px; color:var(--muted); font-weight:700; }
+    .track { flex:1; height:10px; background: rgba(255,255,255,0.03); border-radius:999px; overflow:hidden; border:1px solid rgba(255,255,255,0.02) }
+    .fill {
+      height:100%; width:0%; border-radius:999px;
+      background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+      transition: width 420ms ease;
+    }
+    .pct { width:42px; text-align:right; color:var(--muted); font-weight:700; }
+
+    footer { text-align:center; margin-top:18px; color:var(--muted); font-size:0.92rem; }
+
+    /* responsive */
+    @media (max-width: 980px) {
+      .main-grid { grid-template-columns: 1fr; }
+      canvas#drawCanvas { width:280px; height:280px; }
+      .prediction-bubble { width:72px; height:72px; font-size:22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+
+    <!-- top -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">NDC</div>
+        <div class="title">
+          <h1>NEURAL DIGIT CLASSIFIER</h1>
+          <p>Interactive demo to draw digits and inspect model predictions </p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <div class="badge">Final Val. Acc: <strong style="margin-left:8px;color:#fff">{{ val_acc }}</strong></div>
+      </div>
+    </header>
+
+    <!-- main two-column layout -->
+    <main class="main-grid">
+
+      <!-- left: canvas -->
+      <section class="glass draw-area" aria-labelledby="draw-heading">
+        <div class="draw-title">
+          <h3 id="draw-heading">Draw your digit</h3>
+          <div class="draw-sub">Use mouse or touch. Click Predict when ready.</div>
+        </div>
+
+        <div style="text-align:center;">
+          <div class="canvas-frame" role="img" aria-label="Drawing canvas">
+            <!-- preserved canvas id and size -->
+            <canvas id="drawCanvas" width="280" height="280"></canvas>
+          </div>
+
+          <div class="controls" role="group" aria-label="Canvas controls">
+            <button id="clearButton" class="btn btn-clear">Clear</button>
+            <button id="predictButton" class="btn btn-predict">Predict</button>
+          </div>
+
+          <div style="margin-top:12px; color:var(--muted); font-size:0.92rem;">
+            Tip: draw a clean digit and click <strong>Predict</strong> for best results.
+          </div>
+        </div>
+      </section>
+
+      <!-- right: predictions -->
+      <aside class="glass prediction-panel" aria-labelledby="prediction-heading">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h4 id="prediction-heading">Prediction Results</h4>
+          <div class="prediction-meta">Model: <strong>Random Forest</strong></div>
+        </div>
+
+        <div class="prediction-top" aria-live="polite">
+          <div class="prediction-bubble" id="mainPrediction">_</div>
+          <div>
+            <div class="prediction-meta">Top Prediction</div>
+            <div style="font-weight:700; font-size:1.05rem; color:#fff" id="mainPredictionLabel">—</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="prediction-meta" style="margin-bottom:8px;">Top 3 Predictions</div>
+          <div class="top3" id="top3Predictions">
+            <!-- JS will populate items like:
+              <div class="item"><div>7</div><div>78%</div></div>
+            -->
+          </div>
+        </div>
+
+        <div style="margin-top:14px;">
+          <div class="prediction-meta">Full probability distribution</div>
+          <div class="probabilities" id="probabilities">
+            <!-- JS will create .prob-row elements for digits 0..9 -->
+          </div>
+        </div>
+
+        <div style="margin-top:14px; color:var(--muted); font-size:0.92rem;">
+          Final validation accuracy: <strong style="color:#fff">{{ val_acc }}</strong>
+        </div>
+      </aside>
+
+    </main>
+
+    <footer>
+      Made with ❤️ •NEURAL DIGIT CLASSIFIER demo — <span style="color:var(--muted)">clean UI</span>
+    </footer>
+  </div>
+
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <!-- your existing canvas script; it should still target drawCanvas and clearButton -->
+  <script src="{{ url_for('static', filename='js/canvas.js') }}"></script>
+
+  <script>
+    /* Lightweight UI helper: updateProbabilities(probArray)
+       - probArray: array of 10 floats (0..1)
+       - updates mainPrediction, top3, and renders bars in #probabilities
+       Call updateProbabilities([...]) from your JS after receiving model output.
+    */
+    function updateProbabilities(probArray) {
+      if (!Array.isArray(probArray) || probArray.length < 10) return;
+      const probs = probArray.map(p => Math.max(0, Math.min(1, p)));
+      const probsContainer = document.getElementById('probabilities');
+      const top3Container = document.getElementById('top3Predictions');
+      const mainPred = document.getElementById('mainPrediction');
+      const mainLabel = document.getElementById('mainPredictionLabel');
+
+      probsContainer.innerHTML = '';
+      top3Container.innerHTML = '';
+
+      const indexed = probs.map((p,i)=>({p,i})).sort((a,b)=>b.p-a.p);
+      // main
+      if (indexed[0]) {
+        mainPred.textContent = indexed[0].i;
+        mainLabel.textContent = `${Math.round(indexed[0].p*100)}% confidence`;
+      }
+
+      // top 3
+      indexed.slice(0,3).forEach(it=>{
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `<div style="font-weight:700">${it.i}</div><div style="font-weight:700">${Math.round(it.p*100)}%</div>`;
+        top3Container.appendChild(div);
+      });
+
+      // bars
+      probs.forEach((p,i)=>{
+        const row = document.createElement('div');
+        row.className = 'prob-row';
+        row.innerHTML = `
+          <div class="digit-label">${i}</div>
+          <div class="track"><div class="fill" style="width:${Math.round(p*100)}%"></div></div>
+          <div class="pct">${Math.round(p*100)}%</div>
+        `;
+        probsContainer.appendChild(row);
+      });
+    }
+
+    // Wire predictButton to dispatch a custom event if present (optional)
+    document.addEventListener('DOMContentLoaded', () => {
+      const predictBtn = document.getElementById('predictButton');
+      if (predictBtn) {
+        predictBtn.addEventListener('click', () => {
+          // If your canvas.js exposes a function to send canvas for prediction, call it here.
+          // Example (uncomment & adapt if canvas.js provides sendForPrediction):
+          // if (typeof sendForPrediction === 'function') sendForPrediction();
+          // Otherwise dispatch a custom event your app can listen to:
+          document.dispatchEvent(new CustomEvent('mnist:predict'));
+        });
+      }
+    });
+  </script>
+</body>
+</html>
