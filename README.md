@@ -12,16 +12,25 @@ This intelligent web application leverages cutting-edge deep learning to instant
 
 ## 🧠 Project Preview
 
-<h2 align="center">🚀 Live Demo</h2>
+<div align="center">
 
-<p align="center">
-<a href="https://neural-digit-recognizer-t47d.onrender.com/" target="_blank">
-<img src="images/preview.gif" alt="Live demo preview" width="540" />
-</a>
-</p>
+  <!-- Live Demo Button -->
+  <h1>🚀 <a href="https://neural-digit-recognizer-t47d.onrender.com/" target="_blank" style="text-decoration:none;">Live Demo</a></h1>
 
+  <br>
 
-<p align="center"><em>Click the preview to open the live demo</em></p>
+  <!-- Divider Line -->
+  <hr style="width:60%; border: 1px solid #d3d3d3;">
+
+  <!-- Preview Section -->
+  <h2>🎯 Preview</h2>
+  <img src="https://github.com/dineshbarri/Neural_Digit_Recognizer/blob/main/images/preview.gif" alt="Digit Recognizer Demo" width="70%" style="border-radius:12px; border:2px solid #ccc;">
+
+  <br><br>
+  <em>🧠 Watch the Neural Digit Recognizer accurately classify handwritten digits in real-time!</em>
+
+</div>
+
 ---
 
 ## ✨ Core Capabilities
@@ -181,6 +190,7 @@ This project is open source and available for educational and commercial use.
 ---
 
 **Built with ❤️ using PyTorch and Flask**
+
 
 
 
