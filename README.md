@@ -1,8 +1,7 @@
-<<<<<<< HEAD
+
 
 ## Neural Digit Classifier 🎯
 
-### An Advanced Deep Learning System for Real-Time Handwritten Digit Recognition
 
 ---
 
@@ -167,6 +166,7 @@ This project is open source and available for educational and commercial use.
 ---
 
 **Built with ❤️ using PyTorch and Flask**
+
 =======
 
 ## Neural Digit Classifier 🎯
@@ -337,4 +337,4 @@ This project is open source and available for educational and commercial use.
 
 **Built with ❤️ using PyTorch and Flask**
 
->>>>>>> 5170a56 (ReadmeChanges)
+
