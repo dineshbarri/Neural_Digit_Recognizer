@@ -131,9 +131,9 @@ Neural_Digit_Recognizer/
 │   ├── confusion_matrix.csv     # Model performance matrix
 │   ├── train_metrics.csv        # Training history
 │   └── val_metrics.csv          # Validation metrics
-│
-├──  images/
-|       └── preview.gif           # output preview
+├──     Procfile                 # tell the deployment platform(render) how to start your web application server
+├──     images/
+|          └── preview.gif       # output preview
 ├── 🎨 templates/
 │   └── index.html               # Main web interface
 │
@@ -190,6 +190,7 @@ This project is open source and available for educational and commercial use.
 ---
 
 **Built with ❤️ using PyTorch and Flask**
+
 
 
 
