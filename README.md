@@ -1,7 +1,6 @@
 
 ## Neural Digit Recognizer 🎯
 
-### An Advanced Deep Learning System for Real-Time Handwritten Digit Recognition
 
 ---
 
@@ -166,6 +165,7 @@ This project is open source and available for educational and commercial use.
 ---
 
 **Built with ❤️ using PyTorch and Flask**
+
 
 
 
