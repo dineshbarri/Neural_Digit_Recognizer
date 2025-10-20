@@ -10,6 +10,15 @@ This intelligent web application leverages cutting-edge deep learning to instant
 
 ---
 
+## 🧠 Project Preview
+
+<div align="center">
+  <img src="images/preview.gif" alt="Neural Digit Recognizer Demo" width="600" style="border-radius:10px; border:2px solid #ccc;">
+  <br><br>
+  <em>Watch the Neural Digit Recognizer accurately classify handwritten numbers!</em>
+</div>
+---
+
 ## ✨ Core Capabilities
 
 ### 🧠 **Advanced Neural Architecture**
@@ -109,6 +118,8 @@ Neural_Digit_Recognizer/
 │   ├── train_metrics.csv        # Training history
 │   └── val_metrics.csv          # Validation metrics
 │
+├──  images/
+|       └── preview.gif           # output preview
 ├── 🎨 templates/
 │   └── index.html               # Main web interface
 │
@@ -165,6 +176,7 @@ This project is open source and available for educational and commercial use.
 ---
 
 **Built with ❤️ using PyTorch and Flask**
+
 
 
 
